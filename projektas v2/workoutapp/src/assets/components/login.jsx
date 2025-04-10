@@ -102,6 +102,13 @@ const Login = () => {
 
 
             </form>
+            <p>
+                Getting started?<br />
+                <span className="line">
+                    
+                    <a href="/register">Register</a>
+                </span>
+            </p>
 
             
 

@@ -1,7 +1,6 @@
-
-
 import { useRef, useState, useEffect } from "react";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -25,6 +24,8 @@ const Register = () => {
 
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false); 
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         userRef.current.focus()
@@ -56,6 +57,45 @@ const Register = () => {
 
     }, [user, pwd, matchPwd])
 
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:3001/login', {
+                username: user,
+                password: pwd
+              },
+              {
+                withCredentials: true
+              }
+            );
+        
+            const role = response.data.role;
+    console.log(response.data.message);
+
+  
+
+    if (role === 'Admin'){
+      navigate ('/adminpanel')
+    }
+    else{
+    navigate('/dashboard');
+    }
+  } 
+    catch (err) {
+    console.error(err);
+
+    if (!err?.response) {
+      setErrMsg("No server response");
+    } else if (err.response.status === 401) {
+      setErrMsg("Wrong username or password");
+    } else {
+      setErrMsg("Login failed");
+    }
+
+    errRef.current?.focus();
+  }
+};
     const handleSubmit = async (e) => {
         e.preventDefault();
       
@@ -69,6 +109,7 @@ const Register = () => {
           setUser('');
           setPwd('');
           setMatchPwd('');
+          setTimeout(() => handleLogin(e), 500);
         } catch (err) {
           if (!err?.response) {
             setErrMsg("server error");

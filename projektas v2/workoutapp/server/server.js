@@ -188,11 +188,16 @@ app.post('/register', async (req, res) => {
   
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) return res.sendStatus(403);
-      if (decoded.role !== 'Admin') return res.sendStatus(403);
+      
+      const isAdmin = decoded.role === 'Admin';
   
-      const sql = 'SELECT workouts.*, users.name as user_name FROM workouts JOIN users ON workouts.user_id = users.id';
-  
-      db.query(sql, (err, results) => {
+      const sql = isAdmin
+      ? 'SELECT workouts.*, users.name as user_name FROM workouts JOIN users ON workouts.user_id = users.id'
+      : 'SELECT * FROM workouts WHERE user_id = ?';
+
+      const params = isAdmin ? [] : [decoded.id];
+      
+      db.query(sql, params, (err, results) => {
         if (err) return res.status(500).json({ message: 'DB error' });
         res.json(results);
       });
@@ -266,3 +271,27 @@ app.delete('/workouts/:id', (req, res) => {
     });
   });
 });
+
+//delete user
+app.delete ('/users/:id', (req, res) => {
+
+  const token = req.cookies.token;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.sendStatus(403);
+    if (decoded.role !== 'Admin') return res.sendStatus(403);
+
+    const userId = req.params.id;
+
+    const sql = 'DELETE FROM users WHERE id =?';
+    const params = [userId];
+
+    db.query (sql, params, (err, result) => {
+      if (err) return res.status(500).json({ message: 'delete fail' });
+      res.json({ message: 'user deleted' });
+    });
+  });
+});
+
+

@@ -39,10 +39,22 @@ const AdminPanel = () => {
         }
     
       }
-      
+
+      const workoutCreator = async() => {
+        navigate('/adminworkouts');
+      }
+
+      const handleUserDelete = async (id) => {
+        try {
+          await axios.delete(`http://localhost:3001/users/${id}`, { withCredentials: true });
+          setUsers(users.filter(user => user.id !== id));
+        } catch (err) {
+          console.error("failed to delete user", err);
+        }
+      };
 
 
-      
+
       return (
         <section>
           <h1>Admin Panel</h1>
@@ -62,13 +74,16 @@ const AdminPanel = () => {
                     >
                       <option value="User">User</option>
                       <option value="Admin">Admin</option>
+                      
                     </select>
                   </td>
+                  <button onClick={() => handleUserDelete(user.id)}>Delete</button>
                 </tr>
               ))}
             </tbody>
           </table>
           <button onClick={handleLogout}>Logout</button>
+          <button onClick={workoutCreator}>Admin Workout Creator</button>
         </section>
       );
     };

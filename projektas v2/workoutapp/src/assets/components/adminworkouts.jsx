@@ -66,6 +66,10 @@ useEffect(() => {
     }
   };
 
+  const backToPanel = async() => {
+    navigate('/adminpanel');
+  }
+
   return (
     <section>
       <h1>Admin Workout Manager</h1>
@@ -97,6 +101,7 @@ useEffect(() => {
           ))}
         </select>
         <button type="submit">{editingWorkout ? "Update Workout" : "Add Workout"}</button>
+        <button onClick={backToPanel}>Back to Admin Panel</button>
         {editingWorkout && (
     <button
       type="button"
@@ -113,6 +118,7 @@ useEffect(() => {
     >
       Cancel Edit
     </button>
+    
   )}
 </form>
 
