@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -125,13 +126,14 @@ const Register = () => {
     return (
 
         <section>
+          <GlobalStyle />
             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
+            <Title>Register</Title>
+            <RegisterForm onSubmit={handleSubmit}>
                 <label htmlFor="username">
                     Username:
                 </label>
-                <input
+                <Input
                     type="text"
                     id="username"
                     ref={userRef}
@@ -144,18 +146,17 @@ const Register = () => {
                     onBlur={() => setUserFocus(false)}
 
                     />
-                <p id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"} >
+                <RequirementNote id="uidnote" className={userFocus && user && !validName ? "instructions" : "offscreen"} >
 
-                    | USERNAME REQUIREMENTS | <br />
-                    | 4 to 24 Characters |  <br/>
-                    | Must begin with a letter |  <br />
-                    | Letters, Numbers, Underscores and hyphens allowed | 
-                </p>
+                    - 4 to 24 Characters<br/>
+                    - Must begin with a letter<br />
+                    - Letters, Numbers, Underscores and hyphens allowed
+                </RequirementNote>
 
                 <label htmlFor="password">
                     Password:
                 </label>
-                <input
+                <Input
                     type="password"
                     id="password"
                     onChange={(e) => setPwd(e.target.value)}
@@ -166,18 +167,18 @@ const Register = () => {
                     onFocus={() => setPwdFocus(true)}
                     onBlur={() => setPwdFocus(false)}
                 />
-                <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
-                    | PASSWORD REQUIREMENTS | <br />
-                    | 8 to 24 characters |<br />
-                    | Must include uppercase and lowercase letters, a number and a special character |<br />
-                    | Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">% |</span>
-                </p>
+                <RequirementNote id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
+
+                    - 8 to 24 characters<br />
+                    - Must include uppercase and lowercase letters, a number and a special character<br />
+                    - Allowed special characters: <span aria-label="exclamation mark">!</span> <span aria-label="at symbol">@</span> <span aria-label="hashtag">#</span> <span aria-label="dollar sign">$</span> <span aria-label="percent">%</span>
+                </RequirementNote>
 
 
                 <label htmlFor="confirm_pwd">
                     Confirm Password:
                 </label>
-                <input
+                <Input
                     type="password"
                     id="confirm_pwd"
                     onChange={(e) => setMatchPwd(e.target.value)}
@@ -188,13 +189,13 @@ const Register = () => {
                     onFocus={() => setMatchFocus(true)}
                     onBlur={() => setMatchFocus(false)}
                 />
-                <p id="confirmnote" className={!validMatch ? "instructions" : "offscreen"}>
-                   | Must match the first password input field. |
-                </p>
+                <RequirementNote id="confirmnote" className={!validMatch ? "instructions" : "offscreen"}>
+                   Must match the first password input field.
+                </RequirementNote>
 
-                <button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</button>
+                <Button disabled={!validName || !validPwd || !validMatch ? true : false}>Sign Up</Button>
                 
-            </form>
+            </RegisterForm>
             <p>
                 Already registered?<br />
                 <span className="line">
@@ -214,3 +215,81 @@ const Register = () => {
 }
 
 export default Register
+
+const GlobalStyle = createGlobalStyle`
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #6a11cb, #331652);
+    font-family: sans-serif;
+    color: white;
+  }
+`;
+
+const RegisterForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+`;
+
+const Title = styled.h2`
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  text-align: center;
+`;
+
+const Button = styled.button`
+  background: #6a11cb;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+  outline: none;
+
+   &:disabled {
+    background: #301934;
+    color: #667;
+    cursor: not-allowed;
+  }
+`;
+
+export const RequirementNote = styled.p`
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+  color: white;
+  line-height: 1.5;
+  border-radius: 10px;
+  text-align: left;
+
+  &.offscreen {
+    display: none;
+  }
+
+  span {
+    font-weight: bold;
+    color: #bbb;
+  }
+`;

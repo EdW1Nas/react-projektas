@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
 function Dashboard() {
 
 
@@ -38,14 +38,15 @@ useEffect(() => {
   }
   return (
     <section>
-      <h1>User Dashboard</h1>
+      <GlobalStyle />
+      <Title>User Dashboard</Title>
       <p>{message}</p>
 
-      <h2>Your Workouts</h2>
+      <Title>Your Workouts</Title>
       {workouts.length === 0 ? (
         <p>No workouts assigned yet.</p>
       ) : (
-        <table>
+        <Table>
           <thead>
             <tr>
               <th>Name</th><th>Description</th><th>Type</th><th>Date</th>
@@ -54,19 +55,72 @@ useEffect(() => {
           <tbody>
             {workouts.map((w) => (
               <tr key={w.id}>
-                <td>{w.name}</td>
-                <td>{w.description}</td>
-                <td>{w.type}</td>
-                <td>{w.date?.slice(0, 10)}</td>
+                <Td>{w.name}</Td>
+                <Td>{w.description}</Td>
+                <Td>{w.type}</Td>
+                <Td>{w.date?.slice(0, 10)}</Td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       )}
 
-      <button onClick={handleLogout}>Logout</button>
+      <BackButton onClick={handleLogout}>Logout</BackButton>
     </section>
   );
 }
 
 export default Dashboard;
+
+const GlobalStyle = createGlobalStyle`
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #6a11cb, #331652);
+    font-family: sans-serif;
+    color: white;
+  }
+`;
+
+const Title = styled.h2`
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 10px;
+`;
+
+const Table = styled.table`
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+
+`;
+
+
+const Td = styled.td`
+  padding: 16px 64px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  
+  `;
+
+  const BackButton = styled(Link)`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  transition: background 0.3s;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+`;

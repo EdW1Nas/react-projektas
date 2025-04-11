@@ -117,7 +117,7 @@ app.post('/register', async (req, res) => {
       }
   
       res.json({
-        message: `Welcome ${decoded.name}`,
+        message: `Welcome ${decoded.name}!`,
         role: decoded.role
       });
     });

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
 
 const Login = () => {
 
@@ -66,15 +67,15 @@ const Login = () => {
 
         <section>
 
-
+        <GlobalStyle />
             
-            <h1>Login</h1>
-            <form onSubmit={handleLogin}>
+            <Title>Login</Title>
+            <LoginForm onSubmit={handleLogin}>
 
             <label htmlFor="username">
                     Username:
                 </label>
-                <input
+                <Input
                 type="text"
                 id="username"
                 onChange={(e) => setUser(e.target.value)}
@@ -86,7 +87,7 @@ const Login = () => {
             <label htmlFor="password">
                     Password:
                 </label>
-                <input
+                <Input
                 type="password"
                 id="password"
                 onChange={(e) => setPwd(e.target.value)}
@@ -94,14 +95,14 @@ const Login = () => {
                 required
                 />
 
-                <button disabled={!user || !pwd}>Log In</button>
+                <Button disabled={!user || !pwd}>Log In</Button>
 
 
 
 
 
 
-            </form>
+            </LoginForm>
             <p>
                 Getting started?<br />
                 <span className="line">
@@ -121,3 +122,60 @@ const Login = () => {
 }
 
 export default Login
+
+const GlobalStyle = createGlobalStyle`
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #6a11cb, #331652);
+    font-family: sans-serif;
+    color: white;
+  }
+`;
+
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+`;
+
+const Title = styled.h2`
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  text-align: center;
+`;
+
+const Button = styled.button`
+  background: #6a11cb;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+  outline: none;
+
+   &:disabled {
+    background: #301934;
+    color: #667;
+    cursor: not-allowed;
+  }
+`;
+

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
 
 const AdminPanel = () => {
 
@@ -57,35 +58,136 @@ const AdminPanel = () => {
 
       return (
         <section>
-          <h1>Admin Panel</h1>
-          <table>
+          <GlobalStyle />
+          <Title>Admin Panel</Title>
+          <Table>
             <thead>
-              <tr><th>ID</th><th>Name</th><th>Role</th></tr>
+              <tr><th>ID</th><th>Name</th><th>Role</th><th>Delete User</th></tr>
             </thead>
             <tbody>
             {users.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>
-                    <select
+                  <Td>{user.id}</Td>
+                  <Td>{user.name}</Td>
+                  <Td>
+                    <Select
                       value={user.role}
                       onChange={(e) => updateRole(user.id, e.target.value)}
                     >
                       <option value="User">User</option>
                       <option value="Admin">Admin</option>
                       
-                    </select>
-                  </td>
-                  <button onClick={() => handleUserDelete(user.id)}>Delete</button>
+                    </Select>
+                  </Td>
+                  <Td> <Button onClick={() => handleUserDelete(user.id)}>Delete</Button></Td>
                 </tr>
               ))}
             </tbody>
-          </table>
-          <button onClick={handleLogout}>Logout</button>
-          <button onClick={workoutCreator}>Admin Workout Creator</button>
+          </Table>
+          <BackButton onClick={handleLogout}>Logout</BackButton>
+          <PageButton onClick={workoutCreator}>Admin Workout Creator</PageButton>
         </section>
       );
     };
     
     export default AdminPanel;
+
+    const GlobalStyle = createGlobalStyle`
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to right, #6a11cb, #331652);
+        font-family: sans-serif;
+        color: white;
+      }
+    `;
+
+    const Table = styled.table`
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+  
+  `;
+  
+  
+    const Td = styled.td`
+    padding: 16px 64px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    
+    `;
+  
+    const BackButton = styled(Link)`
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: background 0.3s;
+    text-decoration: none;
+  
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  `;
+
+  const Button = styled.button`
+  background: #6a11cb;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+  outline: none;
+
+`;
+
+  const PageButton = styled.button`
+  background: #6a11cb;
+  color: white;
+  padding: 12px;
+  margin: 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: none;
+  outline: none;
+
+`;
+
+export const Select = styled.select`
+  background: #6a11cb;
+  color: white;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  appearance: none; 
+
+  &:hover {
+    background: #7644c9;
+  }
+
+  &:focus {
+    outline: 2px solid #a484f2;
+  }
+`;
+
+const Title = styled.h2`
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 10px;
+`;
